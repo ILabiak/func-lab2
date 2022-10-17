@@ -1,12 +1,21 @@
-module Lab2 where
+module Lab2
+  ( findIndex
+  , findLastIndex
+  , length
+  , reverse
+  , test
+  )
+  where
 
 import Prelude
 
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..), fromMaybe, isNothing)
 import Data.String (contains, Pattern(..))
+import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (log)
+import Prim.Boolean (True)
 
 
 find:: Int -> forall a. (a -> Boolean) -> List a -> Maybe Int
@@ -33,7 +42,12 @@ findLastIndex condition list =
     then Nothing
     else Just ((length list) - i - 1)
 
+zip :: forall a b. List a -> List b -> List (Tuple a b)
+zip (a:as) (b : bs) = (Tuple a b) : (zip as bs)
+zip _ _ = Nil
+
 
 test::Effect Unit
 test = do
-    log $ show $ findLastIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
+    -- log $ show $ findLastIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
+    log $ show $ zip ("a":"b":"c":Nil) ("d":"e":"f":"g":Nil)
