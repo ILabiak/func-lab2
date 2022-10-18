@@ -5,10 +5,9 @@ import Prelude
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String (contains, Pattern(..))
-import Data.Tuple (Tuple(..))
+import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Effect.Console (log)
-
 
 
 find:: Int -> forall a. (a -> Boolean) -> List a -> Maybe Int
@@ -25,6 +24,14 @@ length :: forall a. List a -> Int
 length Nil = 0
 length (a : list) = length list + 1
 
+unzipFirstEl :: forall a b. List (Tuple a b) -> List a
+unzipFirstEl (a : as) = (fst a):(unzipFirstEl as)
+unzipFirstEl Nil = Nil
+
+unzipSecondEl :: forall a b. List (Tuple a b) -> List b
+unzipSecondEl (b : bs) = (snd b):(unzipSecondEl bs)
+unzipSecondEl Nil = Nil
+
 findIndex :: forall a. (a -> Boolean) -> List a -> Maybe Int
 findIndex = find 0  -- call find func with index 0, condition and list. (condition and list are omitted)
 
@@ -39,7 +46,8 @@ zip :: forall a b. List a -> List b -> List (Tuple a b)
 zip (a:as) (b : bs) = (Tuple a b) : (zip as bs)
 zip _ _ = Nil
 
--- to do unzip
+unzip :: forall a b. List (Tuple a b) -> Tuple (List a) (List b)
+unzip list = Tuple (unzipFirstEl(list)) (unzipSecondEl(list))
 
 filter :: forall a. (a -> Boolean) -> List a -> List a
 filter condition (a:as) | condition a = a : (filter condition as) -- use guard
@@ -68,8 +76,8 @@ test = do
     -- log $ show $ findIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ findLastIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ zip ("a":"b":"c":Nil) ("d":"e":"f":"g":Nil)
-    -- log $ show $ unzip ((Tuple "a" "d") : (Tuple "b" "e") : (Tuple "c" "f") : Nil)
+    log $ show $ unzip ((Tuple "a" "d") : (Tuple "b" "e") : (Tuple "c" "f") : Nil)
     -- log $ show $ filter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ optimisedFilter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil) Nil
     -- log $ show $ take (-2) ("a": "bb": "f" : "b": "d": Nil)
-    log $ show $ optimisedTake (3) ("a": "bb": "f" : "b": "d": Nil) Nil
+    -- log $ show $ optimisedTake (3) ("a": "bb": "f" : "b": "d": Nil) Nil
