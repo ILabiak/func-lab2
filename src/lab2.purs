@@ -1,21 +1,14 @@
-module Lab2
-  ( findIndex
-  , findLastIndex
-  , length
-  , reverse
-  , test
-  )
-  where
+module Lab2 where
 
 import Prelude
 
 import Data.List (List(..), (:))
-import Data.Maybe (Maybe(..), fromMaybe, isNothing)
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String (contains, Pattern(..))
 import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Prim.Boolean (True)
+
 
 
 find:: Int -> forall a. (a -> Boolean) -> List a -> Maybe Int
@@ -46,8 +39,18 @@ zip :: forall a b. List a -> List b -> List (Tuple a b)
 zip (a:as) (b : bs) = (Tuple a b) : (zip as bs)
 zip _ _ = Nil
 
+-- to do unzip
+
+filter :: forall a. (a -> Boolean) -> List a -> List a
+filter condition (a:as) | condition a = a : (filter condition as) -- use guard
+filter condition (_:as) = filter condition as
+filter _ (a) = Nil
+
 
 test::Effect Unit
 test = do
+    -- log $ show $ findIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ findLastIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
-    log $ show $ zip ("a":"b":"c":Nil) ("d":"e":"f":"g":Nil)
+    -- log $ show $ zip ("a":"b":"c":Nil) ("d":"e":"f":"g":Nil)
+    -- log $ show $ unzip ((Tuple "a" "d") : (Tuple "b" "e") : (Tuple "c" "f") : Nil)
+    log $ show $ filter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
