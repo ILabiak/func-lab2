@@ -46,6 +46,12 @@ filter condition (a:as) | condition a = a : (filter condition as) -- use guard
 filter condition (_:as) = filter condition as
 filter _ (a) = Nil
 
+optimisedFilter:: forall a. (a -> Boolean) -> List a -> List a -> List a
+optimisedFilter condition (a:as) b | condition a = optimisedFilter condition as (a:b)
+optimisedFilter condition (_:as) b = optimisedFilter condition as b
+optimisedFilter _ _ b =  reverse b
+optimisedFilter _ _ Nil = Nil
+
 
 test::Effect Unit
 test = do
@@ -53,4 +59,5 @@ test = do
     -- log $ show $ findLastIndex (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ zip ("a":"b":"c":Nil) ("d":"e":"f":"g":Nil)
     -- log $ show $ unzip ((Tuple "a" "d") : (Tuple "b" "e") : (Tuple "c" "f") : Nil)
-    log $ show $ filter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
+    -- log $ show $ filter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
+    log $ show $ optimisedFilter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil) Nil
