@@ -8,7 +8,6 @@ import Data.String (contains, Pattern(..))
 import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (log)
-import Data.Eq(notEq)
 
 
 
@@ -54,7 +53,7 @@ optimisedFilter _ _ b =  reverse b
 optimisedFilter _ _ Nil = Nil
 
 take :: forall a. Int -> List a -> List a
-take n (a:as) = if(notEq n 0) then a:(take (n-1) as) else Nil
+take n (a:as) = if(n > 0) then a:(take (n-1) as) else Nil
 take _ _ = Nil
 
 
@@ -66,4 +65,4 @@ test = do
     -- log $ show $ unzip ((Tuple "a" "d") : (Tuple "b" "e") : (Tuple "c" "f") : Nil)
     -- log $ show $ filter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ optimisedFilter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil) Nil
-    log $ show $ take 2 ("a": "bb": "f" : "b": "d": Nil)
+    log $ show $ take (-2) ("a": "bb": "f" : "b": "d": Nil)
