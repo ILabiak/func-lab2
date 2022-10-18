@@ -56,6 +56,12 @@ take :: forall a. Int -> List a -> List a
 take n (a:as) = if(n > 0) then a:(take (n-1) as) else Nil
 take _ _ = Nil
 
+optimisedTake :: forall a. Int -> List a -> List a -> List a
+optimisedTake n (a:as) b = if(n > 0) then a:(optimisedTake (n-1) as (a:b)) else Nil
+optimisedTake _ _ b = b
+optimisedTake _ (_:as) _ = Nil
+
+
 
 test::Effect Unit
 test = do
@@ -65,4 +71,5 @@ test = do
     -- log $ show $ unzip ((Tuple "a" "d") : (Tuple "b" "e") : (Tuple "c" "f") : Nil)
     -- log $ show $ filter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil)
     -- log $ show $ optimisedFilter (contains $ Pattern "b") ("a": "bb": "f" : "b": "d": Nil) Nil
-    log $ show $ take (-2) ("a": "bb": "f" : "b": "d": Nil)
+    -- log $ show $ take (-2) ("a": "bb": "f" : "b": "d": Nil)
+    log $ show $ optimisedTake (3) ("a": "bb": "f" : "b": "d": Nil) Nil
